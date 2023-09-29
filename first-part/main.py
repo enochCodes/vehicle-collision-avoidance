@@ -84,7 +84,9 @@ def main():
 
     camera_location = carla.Transform(carla.Location(x=1.5, y=0.0, z=2.4))
 
-    camera = world.spawn_actor(camera_bp, camera_location)
+    camera = world.spawn_actor(camera_bp, camera_location) 
+    vehicle_x = 0.0
+    vehicle_y = 0.0
 
     try:
         while True:
@@ -108,6 +110,9 @@ def main():
 
             cv2.imshow("Camera View", image)
             cv2.waitKey(1)
+            vehicle_x =  11
+            vehicle_y =  11
+
 
     finally:
         camera.destroy()
