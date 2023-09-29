@@ -9,6 +9,14 @@ def initialize_carla():
     world = client.get_world()
     return world
 
+# Create a Carla vehicle actor
+def create_vehicle(world):
+    blueprint_library = world.get_blueprint_library()
+    vehicle_bp = blueprint_library.filter('vehicle.*')[0]  # You can choose a specific vehicle type
+    spawn_point = carla.Transform(carla.Location(x=0, y=0, z=2))  # Set the initial spawn location
+    vehicle = world.spawn_actor(vehicle_bp, spawn_point)
+    return vehicle
+
 # Function to process camera data (assuming you have a camera sensor in your simulation)
 def process_camera_data(image):
     # Convert Carla image to a format usable by OpenCV
@@ -76,6 +84,9 @@ def measure_distances_and_speed(relevant_objects, vehicle_x, vehicle_y):
 def main():
     world = initialize_carla()
 
+    # Create a Carla vehicle actor
+    vehicle = create_vehicle(world)
+
     # Assuming you have a camera sensor in your Carla setup
     camera_bp = world.get_blueprint_library().find('sensor.camera.rgb')
     camera_bp.set_attribute('image_size_x', '800')
@@ -84,7 +95,8 @@ def main():
 
     camera_location = carla.Transform(carla.Location(x=1.5, y=0.0, z=2.4))
 
-    camera = world.spawn_actor(camera_bp, camera_location) 
+    camera = world.spawn_actor(camera_bp, camera_location)
+
     vehicle_x = 0.0
     vehicle_y = 0.0
 
@@ -110,11 +122,13 @@ def main():
 
             cv2.imshow("Camera View", image)
             cv2.waitKey(1)
-            vehicle_x =  11
-            vehicle_y =  11
 
+            # Update vehicle position (you can obtain it from your Carla setup)
+            vehicle_x = vehicle.get_location().x
+            vehicle_y = vehicle.get_location().y
 
     finally:
+        vehicle.destroy()
         camera.destroy()
         cv2.destroyAllWindows()
 
