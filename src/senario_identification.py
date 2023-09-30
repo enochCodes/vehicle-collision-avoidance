@@ -77,6 +77,56 @@ def detect_objects(lidar_data):
 
 
 def control_logic(detected_objects, vehicle_speed):
+    throttle = 0.0
+    steering = 0.0
+    brake = 0.0
+    
+    
+    MAX_SPEED = 20.0  
+    SAFE_DISTANCE_CPNCO = 10.0  
+    SAFE_DISTANCE_CPTA = 5.0  
+    
+    
+    cpnco_position = None
+    cpta_position = None
+    cpla_position = None
+    
+    for obj in detected_objects:
+        object_distance = np.linalg.norm(obj['center'][:2])
+        
+        
+        if cpnco_position is None or object_distance < np.linalg.norm(cpnco_position[:2]):
+            cpnco_position = obj['center']
+        
+        
+        if object_distance < SAFE_DISTANCE_CPTA:
+            if cpta_position is None or object_distance < np.linalg.norm(cpta_position[:2]):
+                cpta_position = obj['center']
+        
+        
+        if object_distance < SAFE_DISTANCE_CPNCO:
+            if cpla_position is None or object_distance < np.linalg.norm(cpla_position[:2]):
+                cpla_position = obj['center']
+    
+    
+    if cpnco_position:
+        
+        throttle = 0.0
+        brake = 1.0
+    elif cpta_position:
+        
+        throttle = 0.3  
+        brake = 0.5  
+    elif cpla_position:
+        
+        desired_steering = np.arctan2(cpla_position[1], cpla_position[0])
+        steering = desired_steering
+    
+    
+    if vehicle_speed > MAX_SPEED:
+        throttle = 0.0
+    if abs(steering) > 1.0:
+        steering = np.sign(steering)
     
     
     
@@ -89,7 +139,7 @@ vehicle_bp = world.get_blueprint_library().find('your_vehicle_blueprint')
 vehicle = world.spawn_actor(vehicle_bp, spawn_point)
 
 
-model = load_model('your_advanced_model.h5')
+model = load_model('model.h5')
 
 try:
     
