@@ -6,16 +6,16 @@ This project was created for the 24 hour Bosch hackathon challenge focused on ve
 . Identifies driving scenarios like CPNCO, CPTA, CPLA
 . Calculates braking distances and deceleration parameters
 . Simulates collision avoidance outcomes for identified scenarios
-# Technologies Used:
-. Python
-. matplotlib, seaborn
-. simply
-. PyTorch (optional for ML models)
+# Programing language Used:
+. Python 
+. Opencv2 , numpy
+. Carla (virtual enviroment)
+. Tensorflow (optional for ML models)
 # Gitting Started:
 . clone the repo
 . Install dependencies
-. Run Jupyter notebooks for data visualization
-. View simulator scripts for avoidance simulation
+. copy The file's Into carla exmple folder 
+. 
 # Next Steps:
 . Improve object trajectory forecasting
 . Expand to more scenarios and sensors
