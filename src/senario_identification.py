@@ -75,6 +75,12 @@ def detect_objects(lidar_data):
     
     return detected_objects
 
+def camera_callback(image):
+    image_array = np.array(image.raw_data)
+    image_array = image_array.reshape((image.height, image.width, 4))
+    camera_data.append(image_array)
+    return image
+
 
 def control_logic(detected_objects, vehicle_speed):
     throttle = 0.0
